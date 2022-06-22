@@ -8,7 +8,7 @@ class FedaPayCore{
   FedaPayCore._privateConstructor(){
     // fedaPay.apiBase = "https://api.fedapay.com/v1"; // use this for Live account
     fedaPay.apiBase = "https://sandbox-api.fedapay.com/v1";
-    fedaPay.apiKey = "sk_sandbox_0Dnt_FlhrDAl-MHoflBswT8k";
+    fedaPay.apiKey = "YOUR_SECRET_API_KEY";
 
   }
 
