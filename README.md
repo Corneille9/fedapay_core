@@ -15,6 +15,7 @@ Install requirement packages with:
 flutter pub add json_annotation 
 flutter pub add equatable 
 flutter pub add dio 
+flutter pub add url_launcher 
 ```
 
 ## Usage
