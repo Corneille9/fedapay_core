@@ -41,7 +41,7 @@ class Transaction extends Equatable with FedaPayRequest{
     if(id==null)throw Exception("Could not generate token for null transaction");
     var data = await staticPostRequest(url: url, params: {}, headers: headers);
     token = data['token'];
-    url = data["url"];
+    this.url = data["url"];
   }
 
   void payout({required String url, Map<String, String>? headers}) async {

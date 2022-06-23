@@ -37,25 +37,13 @@ class _MyHomePageState extends State<MyHomePage> {
     //Create a new customer
     Customer customer = Customer(firstname: "Corneille", lastname: "Bkle", email: "bankolecorneille@gmail.com", phoneNumber: PhoneNumber(number: "+22999100542"));
 
-    //Create a new transaction with previous customer
-    Transaction transaction = await FedaPayCore.instance.createTransaction(amount: 5000, customer: customer);
+    bool success = await FedaPayCore.instance.makeTransaction(customer: customer);
 
-    //Trigger the payment to allow the customer to pay
-    await FedaPayCore.instance.createPayout(transaction: transaction, method: TransactionMethod.mtn);
-
-    //Create stream subscription to listen transaction states
-    late StreamSubscription<PaidStatus> subscription;
-    subscription = FedaPayCore.instance.transactionStatus(transaction).listen((event) {
-      if(event==PaidStatus.approved){
-        subscription.cancel();
-        //Do somethings when the customer make payment
-      }
-      else if(event==PaidStatus.canceled || event==PaidStatus.declined){
-        subscription.cancel();
-        //Do somethings when the customer rejects payment or .....
-      }
-      //Do something when transaction status is pending
-    });
+    if(success){
+      debugPrint("Transaction complete with approved status");//Replace this by your custom code
+    }else{
+      debugPrint("Transaction complete with declined or canceled status");//Replace this by your custom code
+    }
   }
 
   @override

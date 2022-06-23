@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:fedapay_core/customer.dart';
 import 'package:fedapay_core/fedapay.dart';
 import 'package:fedapay_core/transaction.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FedaPayCore{
   FedaPay fedaPay = FedaPay();
@@ -8,7 +11,8 @@ class FedaPayCore{
   FedaPayCore._privateConstructor(){
     // fedaPay.apiBase = "https://api.fedapay.com/v1"; // use this for Live account
     fedaPay.apiBase = "https://sandbox-api.fedapay.com/v1";
-    fedaPay.apiKey = "YOUR_SECRET_API_KEY";
+    fedaPay.apiKey = "sk_sandbox_0Dnt_FlhrDAl-MHoflBswT8k";
+    // fedaPay.apiKey = "YOUR_SECRET_API_KEY";
 
   }
 
@@ -42,6 +46,33 @@ class FedaPayCore{
       return transaction.getStatus(url: _Utils.getResourceUrl(fedaPay: fedaPay, resource: "transactions/${transaction.id}"), headers: _Utils.getHeader(fedaPay: fedaPay));
     }).asyncMap((event) async => await event);
 
+  }
+
+  Future<bool> makeTransaction({required Customer customer}) async {
+
+    bool success = false;
+    Transaction transaction = await FedaPayCore.instance.createTransaction(amount: 415000, customer: customer);
+
+    if(await canLaunchUrl(Uri.parse(transaction.url!))){
+      late StreamSubscription<PaidStatus> subscription;
+
+      subscription = FedaPayCore.instance.transactionStatus(transaction).listen((event) async {
+
+        if(event==PaidStatus.approved){
+          subscription.cancel();
+          success = true;
+          await closeInAppWebView();
+        }
+        else if(event==PaidStatus.canceled || event==PaidStatus.declined){
+          subscription.cancel();
+          await closeInAppWebView();
+        }
+      });
+
+      await launchUrl(Uri.parse(transaction.url!),mode: LaunchMode.inAppWebView,webViewConfiguration: const WebViewConfiguration(enableJavaScript: true, enableDomStorage: true));
+      return success;
+    }
+    throw Exception("InAppWebView not supported");
   }
 
 }
