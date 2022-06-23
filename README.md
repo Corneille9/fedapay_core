@@ -21,11 +21,10 @@ flutter pub add url_launcher
 ## Usage
 
 ```dart
-   import 'dart:async';
    import 'fedapay_service.dart';
     
    //Create a new customer
-   Customer customer = Customer(firstname: "Corneille", lastname: "Bkle", email: "bankolecorneille@gmail.com", phoneNumber: PhoneNumber(number: "+22999100542"));
+   Customer customer = Customer(firstname: "firstname", lastname: "lastname", email: "example@gmail.com", phoneNumber: PhoneNumber(number: "+229 .. .. .."));
 
    bool success = await FedaPayCore.instance.makeTransaction(customer: customer);
 
